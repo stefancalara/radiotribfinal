@@ -6,6 +6,9 @@ import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
 import 'package:bonsoir/bonsoir.dart';
+import 'package:google_cast/google_cast.dart';
+import 'package:airplay_button/airplay_button.dart';
+import 'dart:io' show Platform;
 
 void main() {
   runApp(const RadioTribApp());
@@ -57,6 +60,10 @@ class _RadioTribPageState extends State<RadioTribPage> {
     _player = AudioPlayer();
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration.music());
+
+    if (Platform.isAndroid) {
+      GoogleCast().initialize();
+    }
 
     _audioHandler = await AudioService.init(
       builder: () => RadioAudioHandler(_player),
@@ -148,6 +155,23 @@ class _RadioTribPageState extends State<RadioTribPage> {
     );
   }
 
+  Widget _buildCastButton() {
+    if (Platform.isIOS) {
+      return const AirPlayButton(
+        color: Colors.white,
+        size: 28,
+      );
+    }
+    if (Platform.isAndroid) {
+      return GoogleCastButton(
+        color: Colors.white,
+        size: 28,
+        onPressed: _castToDevice,
+      );
+    }
+    return const SizedBox.shrink();
+  }
+
   @override
   void dispose() {
     _pollingTimer?.cancel();
@@ -205,10 +229,7 @@ class _RadioTribPageState extends State<RadioTribPage> {
                           'assets/icon/trib.png',
                           height: 36,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.cast, color: Colors.white, size: 28),
-                          onPressed: _castToDevice,
-                        )
+                        _buildCastButton(),
                       ],
                     ),
                     const SizedBox(height: 20),
