@@ -15,6 +15,8 @@ dependencies:
   audio_service:
   audio_session:
   bonsoir: ^5.1.11
+  google_cast: ^0.1.0
+  airplay_button: ^0.1.0
   flutter_launcher_icons:
   flutter_native_splash:
 
