@@ -65,15 +65,13 @@ class _RadioTribPageState extends State<RadioTribPage> {
     );
 
     await _player.setUrl(streamUrl);
-    _audioHandler.play(); // ✅ Important: Start playback through AudioHandler
-
+    _audioHandler.play(); // must play through audio handler
     _startPollingMetadata();
 
     setState(() {
       _isLoading = false;
     });
   }
-
 
   void _startPollingMetadata() {
     _fetchTrackInfo();
@@ -252,25 +250,22 @@ class RadioAudioHandler extends BaseAudioHandler {
   final AudioPlayer _player;
 
   RadioAudioHandler(this._player) {
-    // Set a default MediaItem immediately so iOS can register NowPlaying
+    // Set default metadata early
     mediaItem.add(const MediaItem(
       id: 'radio-stream',
+      title: 'RadioTrib',
+      artist: 'Streaming Live',
       album: 'RadioTrib',
-      title: 'RadioTrib Live',
-      artist: 'RadioTrib',
     ));
 
     _player.playbackEventStream.listen((event) {
       playbackState.add(playbackState.value.copyWith(
-        controls: _player.playing
-            ? [MediaControl.pause]
-            : [MediaControl.play],
+        controls: _player.playing ? [MediaControl.pause] : [MediaControl.play],
+        playing: _player.playing,
         systemActions: const {
           MediaAction.play,
           MediaAction.pause,
         },
-        androidCompactActionIndices: const [0],
-        playing: _player.playing,
         processingState: _mapProcessingState(_player.processingState),
         updatePosition: _player.position,
         bufferedPosition: _player.bufferedPosition,
@@ -316,4 +311,3 @@ class RadioAudioHandler extends BaseAudioHandler {
     }
   }
 }
-
