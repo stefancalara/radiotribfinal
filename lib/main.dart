@@ -5,7 +5,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
-import 'package:bonsoir/bonsoir.dart';
 
 void main() {
   runApp(const RadioTribApp());
@@ -41,8 +40,6 @@ class _RadioTribPageState extends State<RadioTribPage> {
   bool _isLoading = true;
   double _volume = 1.0;
   Timer? _pollingTimer;
-  BonsoirDiscovery? _discovery;
-  List<ResolvedBonsoirService> _devices = [];
 
   final streamUrl = 'https://streams.radio.co/s78f983952/listen';
   final trackInfoUrl = 'https://public.radio.co/api/v2/s78f983952/track/current';
@@ -61,7 +58,7 @@ class _RadioTribPageState extends State<RadioTribPage> {
     _audioHandler = await AudioService.init(
       builder: () => RadioAudioHandler(_player),
       config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.example.radiotrib.channel.audio',
+        androidNotificationChannelId: 'com.radiotrib.radiotrib.channel.audio',
         androidNotificationChannelName: 'RadioTrib Playback',
         androidNotificationOngoing: true,
       ),
@@ -114,40 +111,6 @@ class _RadioTribPageState extends State<RadioTribPage> {
     }
   }
 
-  void _castToDevice() async {
-    _discovery ??= BonsoirDiscovery(type: '_googlecast._tcp');
-    await _discovery!.ready;
-
-    _discovery!.eventStream?.listen((event) {
-      if (event.type == BonsoirDiscoveryEventType.discoveryServiceResolved) {
-        final resolved = event.service as ResolvedBonsoirService;
-        if (!_devices.any((d) => d.name == resolved.name)) {
-          setState(() => _devices.add(resolved));
-        }
-      }
-    });
-
-    await _discovery!.start();
-
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => ListView(
-        children: _devices.map((device) {
-          return ListTile(
-            title: Text(device.name),
-            subtitle: Text('${device.host}:${device.port}'),
-            onTap: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Device discovered. Casting logic not implemented.')),
-              );
-            },
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   @override
   void dispose() {
     _pollingTimer?.cancel();
@@ -197,18 +160,14 @@ class _RadioTribPageState extends State<RadioTribPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Image.asset(
                           'assets/icon/trib.png',
-                          height: 36,
+                          height: 60,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.cast, color: Colors.white, size: 28),
-                          onPressed: _castToDevice,
-                        )
                       ],
                     ),
                     const SizedBox(height: 20),

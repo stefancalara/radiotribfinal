@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.radiotrib">
+    package="com.radiotrib.radiotrib">
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
@@ -7,7 +7,7 @@
 
 
     <application
-        android:label="radiotrib"
+        android:label="Radio Trib"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

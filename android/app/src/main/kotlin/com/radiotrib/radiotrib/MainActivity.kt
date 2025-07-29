@@ -1,4 +1,4 @@
-package com.example.radiotrib
+package com.radiotrib.radiotrib
 
 import com.ryanheise.audioservice.AudioServiceActivity
 

@@ -1,7 +1,7 @@
 name: radiotrib
-description: "A new Flutter project."
+description: "RADIO TRIB ESTE MUZICA TARE PENTRU PRIETENI"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.3+4
 
 environment:
   sdk: ^3.8.1
@@ -14,7 +14,7 @@ dependencies:
   just_audio:
   audio_service:
   audio_session:
-  bonsoir: ^5.1.11
+
   flutter_launcher_icons:
   flutter_native_splash:
 
@@ -50,3 +50,8 @@ flutter_native_splash:
     image: assets/splash/tribnativelogo.png
     icon_background_color: "#000000"
     android_gravity: center
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/logo.png"
